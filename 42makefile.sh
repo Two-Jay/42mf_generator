@@ -2,6 +2,7 @@
 
 FILE="./.mf"
 TYPE=0
+PHONY=0
 
 if [ -f $FILE ]; then
 	rm -rf $FILE
@@ -15,7 +16,7 @@ echo -e "\n\n" >> $FILE
 # INPUT is user's input
 # if the user didn't enter a input, 2nd parameter will be replaced as a defalut value\
 # TLEN is '\t's wtiting time
-function member_querry()
+function ft_member_querry()
 {
 	local INPUT
 	local TLEN
@@ -33,14 +34,18 @@ function member_querry()
 	else
 		echo -en "$1" >> $FILE
 		printf "%${TLEN}s" | tr " " "\t" >> $FILE
-		echo -e "=\t${INPUT}" >> $FILE
+		if [ $3 \> 0 ]; then
+			echo -e "=\t${INPUT}.a" >> $FILE
+		else
+			echo -e "=\t${INPUT}" >> $FILE
+		fi
 	fi
 }
 
 # this function is for write basic folders in Makefile
 # TLEN is '\t's wtiting time
 # function folder_querry()
-function folder_querry()
+function ft_folder_querry()
 {
 	local TLEN
 	if [ ${#2} \< 4 ]; then
@@ -62,32 +67,71 @@ function folder_querry()
 	echo -en "\n\n" >> $FILE
 }
 
-function type_querry()
+function ft_type_querry()
 {
 	local INPUT
 	echo -en "\033[32;1m?\033[0m \033[2m would like to make directories : src, obj, includes ? (y/n)\033[0m : "
 	read INPUT
 	if [ "$INPUT" == "y" ] ; then
-		folder_querry includes HDR HEADERS
-		folder_querry src SRC SOURCES
-		folder_querry obj OBJ OBJECTS
+		ft_folder_querry includes HDR HEADERS
+		ft_folder_querry src SRC SOURCES
+		ft_folder_querry obj OBJ OBJECTS
 		TYPE=1
 	else
-		echo -e "SRCS\t\t=\t\n" >> $FILE
-		echo -e "HEAD\t\t=\t-I." >> $FILE
-		echo -e "OBJS\t\t=\t\$(SRCS:.c=.o)\n" >> $FILE
+		echo -e "SOURCES\t\t=\t\n" >> $FILE
+		echo -e "HEADERS\t\t=\t-I." >> $FILE
+		echo -e "OBJECTS\t\t=\t\$(SOURCES:.c=.o)\n" >> $FILE
 		TYPE=0
 	fi
 }
 
-member_querry NAME "42"
-echo -en "\n" >> $FILE
-member_querry CC "gcc"
-member_querry CCFLAG "-Wall -Wextra -Werror"
-echo -en "\n" >> $FILE
-type_querry
+function ft_ar_querry()
+{
+	echo -en "\033[32;1m?\033[0m \033[2m is this project for making a library ? (y/n)\033[0m : "
+	read LIB
+	if [ "$LIB" == "y" ]; then
+		LIB=1
+	else
+		LIB=0
+	fi
+}
 
-# mv .mf Makefile
+function ft_phony_querry()
+{
+	echo -en "\033[32;1m?\033[0m \033[2m Do you want .PHONY option ? (y/n)\033[0m : "
+	read PHONY
+	if [ "$PHONY" == "y" ]; then
+		echo -en ".PHONY\t:\t\tall clean fclean re\n" >> $FILE
+	fi
+}
 
-# SRCS			=	
-# OBJS			= $(SRCS:.c=.o)
+
+
+ft_ar_querry
+ft_member_querry NAME "42" LIB
+echo -en "\n" >> $FILE
+ft_member_querry CC "gcc" 0
+ft_member_querry CCFLAG "-Wall -Wextra -Werror" 0
+echo -en "\n" >> $FILE
+ft_type_querry
+
+
+if [ $TYPE == 0 ]; then
+	echo -en "all\t\t:\t\$(NAME)\n\n" >> $FILE
+	echo -en "\$(NAME)\t:\t\$(OBJS)\n" >> $FILE
+	if [ $LIB == 1 ]; then
+		echo -en "\t\tar rcs \$(NAME) \$(OBJECTS)\n\n" >> $FILE
+	else
+		echo -en "\t\t\$(CC) \$(CCFLAG) \$(HEADERS)\n\n" >> $FILE
+	fi
+	echo -en "clean\t:\n\t\trm -rf \$(OBJECTS)\n\n" >> $FILE
+	echo -en "fclean\t:\tclean\n\t\trm -rf \$(NAME)\n\n" >> $FILE
+	echo -en "re\t\t:\tfclean \$(NAME)\n\n\n" >> $FILE
+fi
+
+
+
+
+ft_phony_querry
+
+mv .mf Makefile
