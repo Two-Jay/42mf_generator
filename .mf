@@ -1,0 +1,10 @@
+
+
+
+NAME		=	your project
+
+CC			=	gcc
+CCFLAG		=	-Wall -Wextra -Werror
+INC_DIR		=	
+SRC_DIR		=	
+OBJ_DIR		=	
