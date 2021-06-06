@@ -110,6 +110,29 @@ function ft_phony_querry()
 	fi
 }
 
+echo -en "\033[0;94m \ * * * * * * * * * * * * * * * * * * *  cccccccccccodO0XNWNKOkxxkxxdolcccccccccc \n"
+echo -en "\033[0;94m \ *                                   *  ccccccccoddkKWWMMMMNX0dllooddddolccccccc \n"
+echo -en "\033[0;94m \ *       \(^ .^)/                    *  cccccldOXXkod0NMMMMMMMNOdlccclodddlccccc \n"
+echo -en "\033[0;94m \ *                                   *  ccccoONWMMN0dld0NMMMMMMWNOdlccccldxdlccc \n"
+echo -en "\033[0;94m \ *                     \(^0 ^)/      *  ccldOXWMMMMMN0dld0NMMMMMMWXkocccccoxxlcc \n"
+echo -en "\033[0;94m \ *   All hail                        *  clxOdd0NMMMMMWNOdlx0XWMMMWXOollccccldxoc \n"
+echo -en "\033[0;94m \ *      to Coalition GAM             *  cxXWKxod0NMMMMMWNOdooxKNNOdoxKKkocccldxl \n"
+echo -en "\033[0;94m \ *                                   *  oKWMMWKxox0NMMMMMWXOxooddoxKWMMWXkocclxd \n"
+echo -en "\033[0;94m \ *                                   *  xNMMMMMWKxox0WMMMMMWWXOoco0WMMMMMWXkoldx \n"
+echo -en "\033[0;94m \ *                                   *  xKNWMMMMMN0xoxKWMMMMMMWXkooxKWMMMMMWKkxk \n"
+echo -en "\033[0;94m \ *                                   *  xxdONWMMMMMN0doxKWMMMMMMWXkookXWMMMMMWNO \n"
+echo -en "\033[0;94m \ *    Makefile_generator             *  xxdONWMMMMMN0doxKWMMMMMMWXkookXWMMMMMWNO \n"
+echo -en "\033[0;94m \ *             for 42_network's      *  dxlldONMMMMMWXxclxKWMMMMMMWXkookXWMMMMWO \n"
+echo -en "\033[0;94m \ *                  students         *  oxdccldONWMWKxodxdok0KWMMMMMWKkookXWMMXd \n"
+echo -en "\033[0;94m \ *                                   *  cdxocccldO0xod0NWNOdookXWMMMMMWKxookXNkl \n"
+echo -en "\033[0;94m \ *                                   *  ccdxocccclllkNMMMMWNKOdokXWMMMMMWKxdkklc \n"
+echo -en "\033[0;94m \ *                                   *  cccoxdlccccld0NMMMMMMWNOdokXWMMMMMN0dlcc \n"
+echo -en "\033[0;94m \ *                                   *  ccccldxdlcccclxKWMMMMMMWXkookXWMWXOocccc \n"
+echo -en "\033[0;94m \ *                                   *  ccccccldxdolccclxKWMMMMMMWXkdxKKkolccccc \n"
+echo -en "\033[0;94m \ *                                   *  cccccccclodddddoodkXWWMMWWNKkdolcccccccc \n"
+echo -en "\033[0;94m \ * * * * * * * * * * * * * * * * * * *  ccccccccccccldxxxxxOKKXK0kxolccccccccccc \n"
+
+
 ft_ar_querry
 ft_member_querry NAME "42" LIB
 echo -en "\n" >> $FILE
@@ -122,7 +145,7 @@ if [ $TYPE == 0 ]; then
 	echo -en "all\t\t:\t\$(NAME)\n\n" >> $FILE
 	if [ $LIB == 1 ]; then
 		echo -en "\$(NAME)\t:\t\$(OBJECTS)\n" >> $FILE
-		echo -en "\t\tar rcs \$(NAME) \$(OBJECTS)\n" >> $FILE
+		echo -en "\tar rcs \$(NAME) \$(OBJECTS)\n" >> $FILE
 		echo -en "\t\t" >> $FILE
 		echo "echo \"\033[0;92mlibrary (.a) file was created\"" >> $FILE
 		echo -en "\n\n" >> $FILE
@@ -170,15 +193,20 @@ fi
 ft_phony_querry
 
 if [ -f "./Makefile" ]; then
-	echo -en "\033[32;1m?\033[0m \033[2;91m Makefile is already existent, would you like to overwrite it? (y/n)\033[0m : "
+	echo -en "\033[91;1m!\033[0m \033[1;91m Makefile is already existent, would you like to overwrite it? (y/n)\033[0m : "
 	read CHECK
 	if [ "${CHECK}" == "y" ]; then
 		chmod 755 .mf
 		mv .mf Makefile
+		echo -en "\033[0;94m * * * Makefile was created in your project's directory * * * \n"
+		echo -en "\033[0;94m * * *     ᕕ( ᐛ )ᕗ           Have a good CODING time ! * * * \n"
 	else
 		rm -rf .mf
+		echo -en "\033[91;1m!\033[0m \033[1;31m the process was canceled \033[0m\n"
 	fi
 else
 	chmod 755 .mf
 	mv .mf Makefile
+	echo -en "\033[0;94m * * * Makefile was created in your project's directory * * * \n"
+	echo -en "\033[0;94m * * *        ᕕ( ᐛ )ᕗ             Have a good CODING time  !   * * * \n"
 fi
