@@ -14,7 +14,7 @@ echo -e "\n\n" >> $FILE
 
 # this function is for write basic members in Makefile
 # INPUT is user's input
-# if the user didn't enter a input, 2nd parameter will be replaced as a defalut value\
+# if the user didn't enter a input, 2nd parameter will be replaced칟ㅁㄱ as a defalut value\
 # TLEN is '\t's wtiting time
 function ft_member_querry()
 {
@@ -75,7 +75,7 @@ function ft_folder_querry()
 function ft_type_querry()
 {
 	local INPUT
-	echo -en "\033[32;1m?\033[0m \033[2m would like to make directories : src, obj, includes ? (y/n)\033[0m : "
+	echo -en "\033[32;1m?\033[0m \033[2m would you like to make some directories : src, obj, includes ? (y/n)\033[0m : "
 	read INPUT
 	if [ "$INPUT" == "y" ] ; then
 		ft_folder_querry includes HDR HEADERS
