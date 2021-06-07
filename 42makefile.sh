@@ -1,6 +1,7 @@
 #!/bin/bash
 
 FILE="./.mf"
+CERT="../certimf.txt"
 DIR_INPUT=0
 LIB_INPUT=0
 PHONY_INPUT=0
@@ -216,3 +217,10 @@ else
 fi
 ft_check_dup_and_finish
 
+if [ -f $CERT ]; then
+	rm -rf $CERT
+fi
+touch $CERT
+echo -e "this user had used 42mf_generator to make Makefile.\nlink: https://github.com/Two-Jay/42mf_generator\n"
+echo -e "if you find this file during an evaluation of C-Piscine rush or subjects in la piscine,"
+echo -e "it is up to you whether you give a fail as cheating to the evaluatee or not."

@@ -35,6 +35,9 @@ Note
 
 Don't forget the Stdheader in your Makefile. it is mandatory according to Norm rules!
 
+DO NOT USE this tool for C-piscine 09 - 01. I am, as the developer of this program, not responsible for any penalty for using Makefile which made by this makefile generator in la picsine.
+
+
 Credits
 
 [@jekim](https://profile.intra.42.fr/users/jekim)
