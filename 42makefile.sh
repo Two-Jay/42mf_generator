@@ -1,7 +1,7 @@
 #!/bin/bash
 
 FILE="./.mf"
-CERT="../.certimf.txt"
+CERT="./.certimf.txt"
 DIR_INPUT=0
 LIB_INPUT=0
 PHONY_INPUT=0
