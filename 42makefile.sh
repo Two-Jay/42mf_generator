@@ -1,7 +1,7 @@
 #!/bin/bash
 
 FILE="./.mf"
-CERT="./.certimf.txt"
+BC="./.breadcrumb.txt"
 DIR_INPUT=0
 LIB_INPUT=0
 PHONY_INPUT=0
@@ -218,9 +218,9 @@ fi
 ft_check_dup_and_finish
 
 if [ -f $CERT ]; then
-	rm -rf $CERT
+	rm -rf $BC
 fi
-touch $CERT
-echo -e "this user had used 42mf_generator to make Makefile.\nlink: https://github.com/Two-Jay/42mf_generator\n" >> $CERT
-echo -e "if you find this file during an evaluation of C-Piscine rush or subjects in la piscine," >> $CERT
-echo -e "it is up to you whether you give a fail as cheating to the evaluatee or not." >> $CERT
+touch $BC
+echo -e "this user had used 42mf_generator to make Makefile.\nlink: https://github.com/Two-Jay/42mf_generator\n" >> $BC
+echo -e "if you find this file during an evaluation of C-Piscine rush or subjects in la piscine," >> $BC
+echo -e "it is up to you whether you give a fail as cheating to the evaluatee or not." >> $BC
