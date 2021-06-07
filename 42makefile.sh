@@ -1,15 +1,19 @@
 #!/bin/bash
 
 FILE="./.mf"
-TYPE=0
-PHONY=0
+DIR_INPUT=0
+LIB_INPUT=0
+PHONY_INPUT=0
 
-if [ -f $FILE ]; then
-	rm -rf $FILE
-fi
-touch $FILE
-
-echo -e "\n\n" >> $FILE
+function ft_input_querry()
+{
+	echo -en "\033[32;1m?\033[0m \033[2m would you like to make some directories : src, obj, includes ? (y/n)\033[0m : "
+	read DIR_INPUT
+	echo -en "\033[32;1m?\033[0m \033[2m is this project for making a library (.a file) ? (y/n)\033[0m : "
+	read LIB_INPUT
+	echo -en "\033[32;1m?\033[0m \033[2m Do you want .PHONY option ? (y/n)\033[0m : "
+	read PHONY_INPUT
+}
 
 
 # this function is for write basic members in Makefile
@@ -72,12 +76,9 @@ function ft_folder_querry()
 	echo -en "\n\n" >> $FILE
 }
 
-function ft_type_querry()
+function ft_do_mkdir()
 {
-	local INPUT
-	echo -en "\033[32;1m?\033[0m \033[2m would you like to make some directories : src, obj, includes ? (y/n)\033[0m : "
-	read INPUT
-	if [ "$INPUT" == "y" ] ; then
+	if [ "$DIR_INPUT" == "y" ] ; then
 		ft_folder_querry includes HDR HEADERS
 		ft_folder_querry src SRC SOURCES
 		ft_folder_querry obj OBJ OBJECTS
@@ -90,25 +91,87 @@ function ft_type_querry()
 	fi
 }
 
-function ft_ar_querry()
+
+function ft_check_dup_and_finish()
 {
-	echo -en "\033[32;1m?\033[0m \033[2m is this project for making a library (.a file) ? (y/n)\033[0m : "
-	read LIB
-	if [ "$LIB" == "y" ]; then
-		LIB=1
+	if [ -f "./Makefile" ]; then
+		echo -en "\033[91;1m!\033[0m \033[1;91m Makefile is already existent, would you like to overwrite it? (y/n)\033[0m : "
+		read CHECK
+		if [ "${CHECK}" == "y" ]; then
+			chmod 755 .mf
+			mv .mf Makefile
+			echo -en "\033[0;94m * * * Makefile was created in your project's directory * * * \n"
+			echo -en "\033[0;94m * * *     ᕕ( ᐛ )ᕗ           Have a good CODING time ! * * * \n"
+		else
+			rm -rf .mf
+			echo -en "\033[91;1m!\033[0m \033[1;31m the process was canceled \033[0m\n"
+		fi
 	else
-		LIB=0
+		chmod 755 .mf
+		mv .mf Makefile
+		echo -en "\033[0;94m * * * Makefile was created in your project's directory * * * \n"
+		echo -en "\033[0;94m * * *     ᕕ( ᐛ )ᕗ           Have a good CODING time ! * * * \n"
 	fi
 }
 
-function ft_phony_querry()
+function ft_write_mk_instruction_with_dir()
 {
-	echo -en "\033[32;1m?\033[0m \033[2m Do you want .PHONY option ? (y/n)\033[0m : "
-	read PHONY
-	if [ "$PHONY" == "y" ]; then
-		echo -en ".PHONY\t:\t\tall clean fclean re\n" >> $FILE
+	echo -en "all\t\t:\t\$(NAME)\n\n" >> $FILE
+	if [ "$LIB_INPUT" == "y" ]; then
+		echo -en "\$(NAME)\t:\t\$(OBJECTS)\n" >> $FILE
+		echo -en "\tar rcs \$(NAME) \$(OBJECTS)\n" >> $FILE
+		echo -en "\t" >> $FILE
+		echo "echo \"\033[0;92mlibrary (.a) file was created\"" >> $FILE
+		echo -en "\n\n" >> $FILE
+	else
+		echo -en "\$(NAME)\t:\t\$(OBJECTS) \$(HEADERS)\n" >> $FILE
+		echo -en "\t\$(CC) \$(CCFLAG) \$(HEADERS) \$(OBJECTS) -o \$(NAME)\n" >> $FILE
+		echo -en "\t" >> $FILE
+		echo "echo \"\033[0;92mprogram file was created\"" >> $FILE
+		echo -en "\n\n" >> $FILE
+	fi
+	echo -en "clean\t:\n\trm -rf \$(OBJECTS)\n" >> $FILE
+	echo -en "\t" >> $FILE
+	echo "echo \"\033[0;91mobject files was deleted\"" >> $FILE
+	echo -en "\n\nfclean\t:\tclean\n\trm -rf \$(NAME)\n" >> $FILE
+	echo -en "\t" >> $FILE
+	echo "echo \"\033[0;91m\$(NAME) was deleted\"" >> $FILE
+	echo -en "\n\nre\t\t:\tfclean \$(NAME)\n\n\n" >> $FILE
+	if [ "$PHONY_INPUT" == "y" ]; then
+		echo -en ".PHONY\t:\tall clean fclean re\n" >> $FILE
 	fi
 }
+
+function ft_write_mk_instruction_without_dir()
+{
+	echo -en "all\t\t:\t\$(NAME)\n\n" >> $FILE
+	if [ "$LIB_INPUT" == "y" ]; then
+		echo -en "\$(NAME)\t:\t\$(OBJECTS)\n" >> $FILE
+		echo -en "\tar rcs \$(NAME) \$(OBJECTS)\n" >> $FILE
+		echo -en "\t" >> $FILE
+		echo "echo \"\033[0;92mlibrary (.a) file was created\"" >> $FILE
+		echo -en "\n" >> $FILE
+	else
+		echo -en "\$(NAME)\t:\t\$(OBJECTS) \$(HEADERS)\n" >> $FILE
+		echo -en "\t\$(CC) \$(CCFLAG) \$(HEADERS) \$(OBJECTS) -o \$(NAME)\n" >> $FILE
+		echo -en "\t" >> $FILE
+		echo "echo \"\033[0;92mprogram file was created\"" >> $FILE
+		echo -en "\n\n" >> $FILE
+	fi
+	echo -en "\$(OBJ_DIR)%.o\t:\t\$(SRC_DIR)%.c \$(HEADERS)\n" >> $FILE
+	echo -en "\t@\$(CC) \$(CCFLAG) -c -I\$(HDR_DIR) \$< -o \$@\n\n" >> $FILE
+	echo -en "clean\t:\n\trm -rf \$(OBJ_DIR)\n" >> $FILE
+	echo -en "\t" >> $FILE
+	echo -n "echo \"\033[0;91mobject files was deleted\"" >> $FILE
+	echo -en "\n\nfclean\t:\tclean\n\trm -rf \$(NAME)\n" >> $FILE
+	echo -en "\t" >> $FILE
+	echo "echo \"\033[0;91m\$(NAME) was deleted\"" >> $FILE
+	echo -en "\n\nre\t\t:\tfclean \$(NAME)\n\n" >> $FILE
+	if [ "$PHONY_INPUT" == "y" ]; then
+		echo -en ".PHONY\t:\tall clean fclean re\n" >> $FILE
+	fi
+}
+
 
 echo -en "\033[0;94m \ * * * * * * * * * * * * * * * * * * * * * *  cccccccccccodO0XNWNKOkxxkxxdolcccccccccc \n"
 echo -en "\033[0;94m \ *                                         *  ccccccccoddkKWWMMMMNX0dllooddddolccccccc \n"
@@ -132,80 +195,24 @@ echo -en "\033[0;94m \ *                                         *  ccccccldxdol
 echo -en "\033[0;94m \ *                                         *  cccccccclodddddoodkXWWMMWWNKkdolcccccccc \n"
 echo -en "\033[0;94m \ * * * * * * * * * * * * * * * * * * * * * *  ccccccccccccldxxxxxOKKXK0kxolccccccccccc \n"
 
-
-ft_ar_querry
+## main
+if [ -f $FILE ]; then
+	rm -rf $FILE
+fi
+touch $FILE
+echo -e "\n\n" >> $FILE
 ft_member_querry NAME "42" LIB
 echo -en "\n" >> $FILE
 ft_member_querry CC "gcc" 0
 ft_member_querry CCFLAG "-Wall -Wextra -Werror" 0
+ft_input_querry
 echo -en "\n" >> $FILE
-ft_type_querry
+ft_do_mkdir
 
-if [ $TYPE == 0 ]; then
-	echo -en "all\t\t:\t\$(NAME)\n\n" >> $FILE
-	if [ $LIB == 1 ]; then
-		echo -en "\$(NAME)\t:\t\$(OBJECTS)\n" >> $FILE
-		echo -en "\tar rcs \$(NAME) \$(OBJECTS)\n" >> $FILE
-		echo -en "\t\t" >> $FILE
-		echo "echo \"\033[0;92mlibrary (.a) file was created\"" >> $FILE
-		echo -en "\n\n" >> $FILE
-	else
-		echo -en "\$(NAME)\t:\t\$(OBJECTS)\n" >> $FILE
-		echo -en "\t\t\$(CC) \$(CCFLAG) \$(HEADERS) \$(OBJECTS) -o \$(NAME)\n" >> $FILE
-		echo -en "\t\t" >> $FILE
-		echo "echo \"\033[0;92mprogram file was created\"" >> $FILE
-		echo -en "\n\n" >> $FILE
-	fi
-	echo -en "clean\t:\n\t\trm -rf \$(OBJECTS)\n" >> $FILE
-	echo -en "\t\t" >> $FILE
-	echo "echo \"\033[0;91mobject files was deleted\"" >> $FILE
-	echo -en "\n\nfclean\t:\tclean\n\t\trm -rf \$(NAME)\n" >> $FILE
-	echo -en "\t\t" >> $FILE
-	echo "echo \"\033[0;91m\$(NAME) was deleted\"" >> $FILE
-	echo -en "\n\nre\t\t:\tfclean \$(NAME)\n\n\n" >> $FILE
+if [ "$DIR_INPUT" == "y" ]; then
+	ft_write_mk_instruction_with_dir
 else
-	echo -en "all\t\t:\t\$(NAME)\n\n" >> $FILE
-	if [ $LIB == 1 ]; then
-		echo -en "\$(NAME)\t:\t\$(OBJECTS)\n" >> $FILE
-		echo -en "\t\tar rcs \$(NAME) \$(OBJECTS)\n\n" >> $FILE
-		echo -en "\t\t" >> $FILE
-		echo "echo \"\033[0;92mlibrary (.a) file was created\"" >> $FILE
-		echo -en "\n\n" >> $FILE
-	else
-		echo -en "\$(NAME)\t:\t\$(OBJECTS) \$(HEADERS)\n" >> $FILE
-		echo -en "\t\t\$(CC) \$(CCFLAG) \$(HEADERS) \$(OBJECTS) -o \$(NAME)\n" >> $FILE
-		echo -en "\t\t" >> $FILE
-		echo "echo \"\033[0;92mprogram file was created\"" >> $FILE
-		echo -en "\n\n" >> $FILE
-	fi
-	echo -en "\$(OBJ_DIR)%.o\t:\t\$(SRC_DIR)%.c\t\$(HEADERS)\n" >> $FILE
-	echo -en "\t\t@\$(CC) \$(CCFLAG) -c -I\$(HDR_DIR) \$< -o \$@" >> $FILE
-	echo -en "clean\t:\n\t\trm -rf \$(OBJ_DIR)\n" >> $FILE
-	echo -en "\t\t" >> $FILE
-	echo -n "echo \"\033[0;91mobject files was deleted\"" >> $FILE
-	echo -en "\n\nfclean\t:\tclean\n\t\trm -rf \$(NAME)\n" >> $FILE
-	echo -en "\t\t" >> $FILE
-	echo "echo \"\033[0;91m\$(NAME) was deleted\"" >> $FILE
-	echo -en "\n\nre\t\t:\tfclean \$(NAME)\n\n\n" >> $FILE
+	ft_write_mk_instruction_without_dir
 fi
+ft_check_dup_and_finish
 
-ft_phony_querry
-
-if [ -f "./Makefile" ]; then
-	echo -en "\033[91;1m!\033[0m \033[1;91m Makefile is already existent, would you like to overwrite it? (y/n)\033[0m : "
-	read CHECK
-	if [ "${CHECK}" == "y" ]; then
-		chmod 755 .mf
-		mv .mf Makefile
-		echo -en "\033[0;94m * * * Makefile was created in your project's directory * * * \n"
-		echo -en "\033[0;94m * * *     ᕕ( ᐛ )ᕗ        Have a good CODING time ! * * * \n"
-	else
-		rm -rf .mf
-		echo -en "\033[91;1m!\033[0m \033[1;31m the process was canceled \033[0m\n"
-	fi
-else
-	chmod 755 .mf
-	mv .mf Makefile
-	echo -en "\033[0;94m * * * Makefile was created in your project's directory * * * \n"
-	echo -en "\033[0;94m * * *        ᕕ( ᐛ )ᕗ             Have a good CODING time  !   * * * \n"
-fi
