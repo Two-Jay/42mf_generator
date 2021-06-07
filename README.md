@@ -31,14 +31,14 @@ this generator is able to make a basic Makefile for your project, and supports t
 ***
 
 
-Note
+### Note
 
 Don't forget the Stdheader in your Makefile. it is mandatory according to Norm rules!
 
-Credits
+### Credits
 
 [@jekim](https://profile.intra.42.fr/users/jekim)
 
-License
+### License
 
 This work is published under the terms of 42 Unlicense.
