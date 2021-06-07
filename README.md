@@ -25,7 +25,8 @@ this generator is able to make a basic Makefile for your project, and supports t
   4. .PHONY option
   
 ```  
-! this project is just basic makefile generator. so you need to customize the Makefile for the your project.
+! this project is just basic makefile generator.
+so you need to customize the Makefile for the your project.
 ```
 
 ***
