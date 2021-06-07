@@ -25,7 +25,8 @@ this generator is able to make a basic Makefile for your project, and supports t
   4. .PHONY option
   
 ```  
-! this project is just basic makefile generator. so you need to customize the Makefile for the your project.
+! this project is just basic makefile generator.
+so you need to customize the Makefile for the your project.
 ```
 
 ***
@@ -35,12 +36,12 @@ this generator is able to make a basic Makefile for your project, and supports t
 
 Don't forget the Stdheader in your Makefile. it is mandatory according to Norm rules!
 
-DO NOT USE this tool for C-piscine 09 - 01. I am, as the developer of this program, not responsible for any penalty for using Makefile which made by this makefile generator for a subject of 42.
+DO NOT USE this tool for any subject of la piscine. I am, as the developer of this program, not responsible for any penalty for using Makefile which made by this makefile generator in la picsine.
 
 
-Credits
+### Credits
 
-[@jekim](https://profile.intra.42.fr/users/jekim)
+[@jekim](https://profile.intra.42.fr/users/jekim) in 42Seoul
 
 ### License
 
