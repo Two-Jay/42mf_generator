@@ -1,4 +1,4 @@
-# 42_makefile_generator
+# 42mf_generator
 
 this is a makefile generator for students of 42_networks.
 
