@@ -120,7 +120,7 @@ function ft_write_mk_instruction_with_dir()
 	echo -en "all\t\t:\t\$(NAME)\n\n" >> $FILE
 	if [ "$LIB_INPUT" == "y" ]; then
 		echo -en "\$(NAME)\t:\t\$(OBJECTS)\n" >> $FILE
-		echo -en "\tar rcs \$(NAME) \$(OBJECTS)\n" >> $FILE
+		echo -en "\tar -rcs \$(NAME) \$(OBJECTS)\n" >> $FILE
 		echo -en "\t" >> $FILE
 		echo "echo \"\033[0;92mlibrary (.a) file was created\"" >> $FILE
 		echo -en "\n\n" >> $FILE
@@ -148,7 +148,7 @@ function ft_write_mk_instruction_without_dir()
 	echo -en "all\t\t:\t\$(NAME)\n\n" >> $FILE
 	if [ "$LIB_INPUT" == "y" ]; then
 		echo -en "\$(NAME)\t:\t\$(OBJECTS)\n" >> $FILE
-		echo -en "\tar rcs \$(NAME) \$(OBJECTS)\n" >> $FILE
+		echo -en "\tar -rcs \$(NAME) \$(OBJECTS)\n" >> $FILE
 		echo -en "\t" >> $FILE
 		echo "echo \"\033[0;92mlibrary (.a) file was created\"" >> $FILE
 		echo -en "\n" >> $FILE
