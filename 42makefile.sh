@@ -217,7 +217,7 @@ else
 fi
 ft_check_dup_and_finish
 
-if [ -f $CERT ]; then
+if [ -f $BC ]; then
 	rm -rf $BC
 fi
 touch $BC
