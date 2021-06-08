@@ -1,6 +1,6 @@
 # 42mf_generator
 
-this is a makefile generator for students of 42_networks.
+this is a makefile generator for 42_networks's students.
 
 <img width="80%" src="https://user-images.githubusercontent.com/64449323/121061411-c8d5af80-c7fe-11eb-8657-09e7dae7d76d.mov"/>
 
