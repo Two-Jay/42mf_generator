@@ -58,10 +58,10 @@ function ft_folder_querry()
 	else
 		TLEN=1
 	fi
-	mkdir $1
+	mkdir -p $1
 	echo -en "$2_DIR" >> $FILE
 	printf "%${TLEN}s" | tr " " "\t" >> $FILE
-	echo -e "=\t./$1" >> $FILE
+	echo -e "=\t./$1/" >> $FILE
 	echo -en "$2_FILE" >> $FILE
 	printf "%1s" | tr " " "\t" >> $FILE
 	if [ "$1" == "obj" ]; then
@@ -101,8 +101,8 @@ function ft_check_dup_and_finish()
 		if [ "${CHECK}" == "y" ]; then
 			chmod 755 .mf
 			mv .mf Makefile
-			echo -en "\033[0;94m * * * Makefile was created in your project's directory * * * \n"
-			echo -en "\033[0;94m * * *     ᕕ( ᐛ )ᕗ           Have a good CODING time ! * * * \n"
+			echo -en "\033[0;94m * * * Makefile was created in your project's directory * * * \033[0m\n"
+			echo -en "\033[0;94m * * *     ᕕ( ᐛ )ᕗ           Have a good CODING time ! * * * \033[0m\n"
 		else
 			rm -rf .mf
 			echo -en "\033[91;1m!\033[0m \033[1;31m the process was canceled \033[0m\n"
@@ -110,66 +110,67 @@ function ft_check_dup_and_finish()
 	else
 		chmod 755 .mf
 		mv .mf Makefile
-		echo -en "\033[0;94m * * * Makefile was created in your project's directory * * * \n"
-		echo -en "\033[0;94m * * *     ᕕ( ᐛ )ᕗ           Have a good CODING time ! * * * \n"
+		echo -en "\033[0;94m * * * Makefile was created in your project's directory * * * \033[0m\n"
+		echo -en "\033[0;94m * * *     ᕕ( ᐛ )ᕗ           Have a good CODING time ! * * * \033[0m\n"
 	fi
 }
 
 function ft_write_mk_instruction_with_dir()
 {
-	echo -en "all\t\t:\t\$(NAME)\n\n" >> $FILE
+	echo -en "all\t\t\t:\t\$(NAME)\n\n" >> $FILE
 	if [ "$LIB_INPUT" == "y" ]; then
-		echo -en "\$(NAME)\t:\t\$(OBJECTS)\n" >> $FILE
-		echo -en "\tar -rcs \$(NAME) \$(OBJECTS)\n" >> $FILE
-		echo -en "\t" >> $FILE
-		echo "echo \"\033[0;92mlibrary (.a) file was created\"" >> $FILE
+		echo -en "\$(NAME)\t\t:\t\$(OBJ_DIR) \$(OBJECTS)\n" >> $FILE
+		echo -en "\t\tar -rcs \$(NAME) \$(OBJECTS)\n" >> $FILE
+		echo -en "\t\t" >> $FILE
+		echo -n "@echo \"\033[0;92m* \$(NAME) library file was created *\033[0m\"" >> $FILE
 		echo -en "\n\n" >> $FILE
 	else
-		echo -en "\$(NAME)\t:\t\$(OBJECTS) \$(HEADERS)\n" >> $FILE
-		echo -en "\t\$(CC) \$(CCFLAG) \$(HEADERS) \$(OBJECTS) -o \$(NAME)\n" >> $FILE
-		echo -en "\t" >> $FILE
-		echo "echo \"\033[0;92mprogram file was created\"" >> $FILE
+		echo -en "\$(NAME)\t\t:\t\$(OBJ_DIR) \$(OBJECTS)\n" >> $FILE
+		echo -en "\t\t\$(CC) \$(CCFLAG) \$(OBJECTS) -o \$(NAME)\n" >> $FILE
+		echo -en "\t\t" >> $FILE
+		echo -n "@echo \"\033[0;92m* \$(NAME) program file was created\033[0m *\"" >> $FILE
 		echo -en "\n\n" >> $FILE
 	fi
-	echo -en "clean\t:\n\trm -rf \$(OBJECTS)\n" >> $FILE
-	echo -en "\t" >> $FILE
-	echo "echo \"\033[0;91mobject files was deleted\"" >> $FILE
-	echo -en "\n\nfclean\t:\tclean\n\trm -rf \$(NAME)\n" >> $FILE
-	echo -en "\t" >> $FILE
-	echo "echo \"\033[0;91m\$(NAME) was deleted\"" >> $FILE
-	echo -en "\n\nre\t\t:\tfclean \$(NAME)\n\n\n" >> $FILE
+	echo -en "\$(OBJ_DIR)%.o : \$(SRC_DIR)%.c\n\t\t@\$(CC) \$(CCFLAGS) -c \$< -o \$@\n\n" >> $FILE
+	echo -en "clean\t\t:\n\t\trm -rf \$(OBJECTS)\n" >> $FILE
+	echo -en "\t\t" >> $FILE
+	echo -n "@echo \"\033[0;91m* \$(NAME) object files was deleted *\033[0m\"" >> $FILE
+	echo -en "\n\nfclean\t\t:\tclean\n\t\trm -rf \$(NAME)\n" >> $FILE
+	echo -en "\t\t" >> $FILE
+	echo -n "@echo \"\033[0;91m* \$(NAME) was deleted *\033[0m\"" >> $FILE
+	echo -en "\n\nre\t\t\t:\tfclean \$(NAME)\n\n" >> $FILE
 	if [ "$PHONY_INPUT" == "y" ]; then
-		echo -en ".PHONY\t:\tall clean fclean re\n" >> $FILE
+		echo -en ".PHONY\t\t:\tall clean fclean re\n" >> $FILE
 	fi
 }
 
 function ft_write_mk_instruction_without_dir()
 {
-	echo -en "all\t\t:\t\$(NAME)\n\n" >> $FILE
+	echo -en "all\t\t\t:\t\$(NAME)\n\n" >> $FILE
 	if [ "$LIB_INPUT" == "y" ]; then
-		echo -en "\$(NAME)\t:\t\$(OBJECTS)\n" >> $FILE
-		echo -en "\tar -rcs \$(NAME) \$(OBJECTS)\n" >> $FILE
-		echo -en "\t" >> $FILE
-		echo "echo \"\033[0;92mlibrary (.a) file was created\"" >> $FILE
+		echo -en "\$(NAME)\t\t:\t\$(OBJECTS)\n" >> $FILE
+		echo -en "\t\tar -rcs \$(NAME) \$(OBJECTS)\n" >> $FILE
+		echo -en "\t\t" >> $FILE
+		echo -n "@echo \"\033[0;92m* \$(NAME) library file was created *\033[0m\"" >> $FILE
 		echo -en "\n" >> $FILE
 	else
-		echo -en "\$(NAME)\t:\t\$(OBJECTS) \$(HEADERS)\n" >> $FILE
-		echo -en "\t\$(CC) \$(CCFLAG) \$(HEADERS) \$(OBJECTS) -o \$(NAME)\n" >> $FILE
-		echo -en "\t" >> $FILE
-		echo "echo \"\033[0;92mprogram file was created\"" >> $FILE
+		echo -en "\$(NAME)\t\t:\t\$(OBJECTS)\n" >> $FILE
+		echo -en "\t\t\$(CC) \$(CCFLAG) \$(HEADERS) \$(OBJECTS) -o \$(NAME)\n" >> $FILE
+		echo -en "\t\t" >> $FILE
+		echo -n "@echo \"\033[0;92m* \$(NAME) program file was created *\033[0m\"" >> $FILE
 		echo -en "\n\n" >> $FILE
 	fi
-	echo -en "\$(OBJ_DIR)%.o\t:\t\$(SRC_DIR)%.c \$(HEADERS)\n" >> $FILE
-	echo -en "\t@\$(CC) \$(CCFLAG) -c -I\$(HDR_DIR) \$< -o \$@\n\n" >> $FILE
-	echo -en "clean\t:\n\trm -rf \$(OBJ_DIR)\n" >> $FILE
-	echo -en "\t" >> $FILE
-	echo -n "echo \"\033[0;91mobject files was deleted\"" >> $FILE
-	echo -en "\n\nfclean\t:\tclean\n\trm -rf \$(NAME)\n" >> $FILE
-	echo -en "\t" >> $FILE
-	echo "echo \"\033[0;91m\$(NAME) was deleted\"" >> $FILE
-	echo -en "\n\nre\t\t:\tfclean \$(NAME)\n\n" >> $FILE
+	# echo -en "\$(OBJ_DIR)%.o\t:\t\$(SRC_DIR)%.c \$(HEADERS)\n" >> $FILE
+	# echo -en "\t@\$(CC) \$(CCFLAG) -c -I\$(HDR_DIR) \$< -o \$@\n\n" >> $FILE
+	echo -en "clean\t\t:\n\t\trm -rf \$(OBJECTS)\n" >> $FILE
+	echo -en "\t\t" >> $FILE
+	echo -n "@echo \"\033[0;91m* \$(NAME) object files was deleted *\033[0m\"" >> $FILE
+	echo -en "\n\nfclean\t\t:\tclean\n\t\trm -rf \$(NAME)\n" >> $FILE
+	echo -en "\t\t" >> $FILE
+	echo -n "@echo \"\033[0;91m* \$(NAME) was deleted* \033[0m\"" >> $FILE
+	echo -en "\n\nre\t\t\t:\tfclean all\n\n" >> $FILE
 	if [ "$PHONY_INPUT" == "y" ]; then
-		echo -en ".PHONY\t:\tall clean fclean re\n" >> $FILE
+		echo -en ".PHONY\t\t:\tall clean fclean re\n" >> $FILE
 	fi
 }
 
