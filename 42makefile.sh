@@ -160,8 +160,6 @@ function ft_write_mk_instruction_without_dir()
 		echo -n "@echo \"\033[0;92m* \$(NAME) program file was created *\033[0m\"" >> $FILE
 		echo -en "\n\n" >> $FILE
 	fi
-	# echo -en "\$(OBJ_DIR)%.o\t:\t\$(SRC_DIR)%.c \$(HEADERS)\n" >> $FILE
-	# echo -en "\t@\$(CC) \$(CCFLAG) -c -I\$(HDR_DIR) \$< -o \$@\n\n" >> $FILE
 	echo -en "clean\t\t:\n\t\trm -rf \$(OBJECTS)\n" >> $FILE
 	echo -en "\t\t" >> $FILE
 	echo -n "@echo \"\033[0;91m* \$(NAME) object files was deleted *\033[0m\"" >> $FILE
