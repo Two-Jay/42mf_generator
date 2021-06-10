@@ -1,13 +1,22 @@
 #!/bin/bash
 
 FILE="./.mf"
-BC="./.breadcrumb.txt"
+BC="breadcrumb.txt"
 DIR_INPUT=0
 LIB_INPUT=0
 PHONY_INPUT=0
+NAME_INPUT
+CC_INPUT
+CCFLAG_INPUT
 
 function ft_input_querry()
 {
+	echo -en "\033[32;1m?\033[0m \033[2m(your project's NAME ?)\033[0m : "
+	read NAME_INPUT
+	echo -en "\033[32;1m?\033[0m \033[2m(your project's CC ?)\033[0m : "
+	read CC_INPUT
+	echo -en "\033[32;1m?\033[0m \033[2m(your project's CCFLAG ?)\033[0m : "
+	read CCFLAG_INPUT
 	echo -en "\033[32;1m?\033[0m \033[2m would you like to make some directories : src, obj, includes ? (y/n)\033[0m : "
 	read DIR_INPUT
 	echo -en "\033[32;1m?\033[0m \033[2m is this project for making a library (.a file) ? (y/n)\033[0m : "
@@ -16,36 +25,41 @@ function ft_input_querry()
 	read PHONY_INPUT
 }
 
-
 # this function is for write basic members in Makefile
 # INPUT is user's input
 # if the user didn't enter a input, 2nd parameter will be replaced칟ㅁㄱ as a defalut value\
 # TLEN is '\t's wtiting time
-function ft_member_querry()
+function ft_name_querry()
 {
-	local INPUT
-	local TLEN
-	if [ ${#1} \< 4 ]; then
-		TLEN=3
-	else
-		TLEN=2
+	if [ x$NAME_INPUT == x ] ; then
+		NAME_INPUT=42
 	fi
-	echo -en "\033[32;1m?\033[0m \033[2m(your project's $1)\033[0m : "
-	read INPUT
-	if [ -z "$INPUT" ] ; then
-		echo -en "$1" >> $FILE
-		printf "%${TLEN}s" | tr " " "\t" >> $FILE
-		echo -e "=\t$2" >> $FILE
+	if [ "$LIB_INPUT" == "y" ] ; then
+		echo -en "NAME\t\t=\t$NAME_INPUT.a" >> $FILE
 	else
-		echo -en "$1" >> $FILE
-		printf "%${TLEN}s" | tr " " "\t" >> $FILE
-		if [ $3 \> 0 ]; then
-			echo -e "=\t${INPUT}.a" >> $FILE
-		else
-			echo -e "=\t${INPUT}" >> $FILE
-		fi
+		echo -en "NAME\t\t=\t$NAME_INPUT" >> $FILE
 	fi
 }
+
+function ft_cc_querry()
+{
+	if [ x$CC_INPUT == x ] ; then
+		CC_INPUT=gcc
+	fi
+	echo -en "CC\t\t\t=\t$CC_INPUT\n" >> $FILE
+}
+
+function ft_ccflag_querry()
+{
+	if [ x$CCFLAG_INPUT != x ] ; then
+		echo -en "CCFLAG\t\t=\t$CCFLAG_INPUT\n" >> $FILE
+	else
+		echo -en "CCFLAG\t\t=\t-Wall -Wextra -Werror\n" >> $FILE
+	fi
+}
+
+
+
 
 # this function is for write basic folders in Makefile
 # TLEN is '\t's wtiting time
@@ -152,7 +166,7 @@ function ft_write_mk_instruction_without_dir()
 		echo -en "\t\tar -rcs \$(NAME) \$(OBJECTS)\n" >> $FILE
 		echo -en "\t\t" >> $FILE
 		echo -n "@echo \"\033[0;92m* \$(NAME) library file was created *\033[0m\"" >> $FILE
-		echo -en "\n" >> $FILE
+		echo -en "\n\n" >> $FILE
 	else
 		echo -en "\$(NAME)\t\t:\t\$(OBJECTS)\n" >> $FILE
 		echo -en "\t\t\$(CC) \$(CCFLAG) \$(HEADERS) \$(OBJECTS) -o \$(NAME)\n" >> $FILE
@@ -200,12 +214,12 @@ if [ -f $FILE ]; then
 	rm -rf $FILE
 fi
 touch $FILE
-echo -e "\n\n" >> $FILE
-ft_member_querry NAME "42" LIB
-echo -en "\n" >> $FILE
-ft_member_querry CC "gcc" 0
-ft_member_querry CCFLAG "-Wall -Wextra -Werror" 0
 ft_input_querry
+echo -e "\n\n" >> $FILE
+ft_name_querry
+echo -en "\n" >> $FILE
+ft_cc_querry
+ft_ccflag_querry
 echo -en "\n" >> $FILE
 ft_do_mkdir
 
@@ -223,3 +237,4 @@ touch $BC
 echo -e "this user had used 42mf_generator to make Makefile.\nlink: https://github.com/Two-Jay/42mf_generator\n" >> $BC
 echo -e "if you find this file during an evaluation of C-Piscine rush or subjects in la piscine," >> $BC
 echo -e "it is up to you whether you give a fail as cheating to the evaluatee or not." >> $BC
+mv $BC .$BC
