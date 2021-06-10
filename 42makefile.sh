@@ -153,7 +153,7 @@ function ft_write_mk_instruction_without_dir()
 		echo "echo \"\033[0;92mlibrary (.a) file was created\"" >> $FILE
 		echo -en "\n" >> $FILE
 	else
-		echo -en "\$(NAME)\t:\t\$(OBJECTS) \$(HEADERS)\n" >> $FILE
+		echo -en "\$(NAME)\t:\t\$(OBJECTS)\n" >> $FILE
 		echo -en "\t\$(CC) \$(CCFLAG) \$(HEADERS) \$(OBJECTS) -o \$(NAME)\n" >> $FILE
 		echo -en "\t" >> $FILE
 		echo "echo \"\033[0;92mprogram file was created\"" >> $FILE
