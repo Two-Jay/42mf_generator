@@ -237,4 +237,4 @@ touch $BC
 echo -e "this user had used 42mf_generator to make Makefile.\nlink: https://github.com/Two-Jay/42mf_generator\n" >> $BC
 echo -e "if you find this file during an evaluation of C-Piscine rush or subjects in la piscine," >> $BC
 echo -e "it is up to you whether you give a fail as cheating to the evaluatee or not." >> $BC
-mv $BC .$BC
+mv $BC ../.$BC
